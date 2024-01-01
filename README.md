@@ -12,6 +12,12 @@ Install package python3-lgpio
 
 sudo apt install python3-lgpio
 
+Downloadig GPIOconverter
+========================
+Log into the Respberry Pi Model 5 and clone the GPIODconverter software and run:
+
+git clone https://github.com/bobrathbone/GPIOconverter
+
 Installation
 ============
 Create a sub-directory called RPi in the directory where your GPIO code is installed
