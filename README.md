@@ -6,6 +6,10 @@ Do not use it for earlier models such as the Model 3B or 4
 It is designed to intercept GPIO calls and convert them to LGPIO calls.
 See: https://abyz.me.uk/lg/py_lgpio.html
 
+OUTPUT: User Program --> GPIO calls --> GPIOconverter --> LGPIO
+
+INPUT: LGPIO events --> GPIOconverter --> User Program
+
 Pre-requisites
 =============
 Install package python3-lgpio
