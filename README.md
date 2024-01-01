@@ -14,7 +14,7 @@ sudo apt install python3-lgpio
 
 Downloadig GPIOconverter
 ========================
-Log into the Respberry Pi Model 5 and clone the GPIODconverter software and run:
+Log into the Raspberry Pi Model 5 and clone the GPIODconverter software and run:
 
 git clone https://github.com/bobrathbone/GPIOconverter
 
