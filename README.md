@@ -1,15 +1,15 @@
 RPi/GPIO.py
 ===========
-
 The GPIO.py code is only for use with the Raspberry Pi Model 5.
 Do not use it for earlier models such as the Model 3B or 4
 
 It is designed to intercept GPIO calls and convert them to LGPIO calls.
 See: https://abyz.me.uk/lg/py_lgpio.html
 
-Pre-requsites
+Pre-requisites
 =============
 Install package python3-lgpio
+
 sudo apt install python3-lgpio
 
 Installation
@@ -18,17 +18,23 @@ Create a sub-directory called RPi in the directory where your GPIO code is insta
 For example code in directory /usr/share/radio:
 
 cd /usr/share/radio
+
 mkdir RPi
+
 cp <source>/GPIO.py /usr/share/radio/RPi/.
+
 Note: The radiod package installation script has already done this
 
 Enabling GPIO.py
 ================
 For a Raspberry Pi model 5 only. Example:
+
 touch /usr/share/radio/RPi/__init__.py
+
 The instruction above will cause the code using the GPIO calls to see directory RPi as a pacckage.
 
 For earlier models such as the 3B or 4 disable the package
+
 rm /usr/share/radio/RPi/__init__.py
 
 Support
