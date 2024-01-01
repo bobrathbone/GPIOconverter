@@ -21,7 +21,7 @@ cd /usr/share/radio
 
 mkdir RPi
 
-cp <source>/GPIO.py /usr/share/radio/RPi/.
+cp \<source\>/GPIO.py /usr/share/radio/RPi/.
 
 Note: The radiod package installation script has already done this
 
