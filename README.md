@@ -8,7 +8,7 @@ See: https://abyz.me.uk/lg/py_lgpio.html
 
 OUTPUT: User Program --> GPIO calls --> GPIOconverter --> LGPIO
 
-INPUT: LGPIO events --> GPIOconverter --> User Program
+INPUT: LGPIO events --> GPIOconverter --> GPIO events --> User Program
 
 Pre-requisites
 =============
