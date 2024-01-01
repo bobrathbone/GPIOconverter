@@ -29,13 +29,13 @@ Enabling GPIO.py
 ================
 For a Raspberry Pi model 5 only. Example:
 
-touch /usr/share/radio/RPi/__init__.py
+touch /usr/share/radio/RPi/\_\_init\_\_.py
 
-The instruction above will cause the code using the GPIO calls to see directory RPi as a pacckage.
+The instruction above will cause the code using the GPIO calls to see directory RPi as a package.
 
 For earlier models such as the 3B or 4 disable the package
 
-rm /usr/share/radio/RPi/__init__.py
+rm /usr/share/radio/RPi/\_\_init\_\_.py
 
 Support
 =======
