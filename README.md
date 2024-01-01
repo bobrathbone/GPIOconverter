@@ -37,9 +37,17 @@ For earlier models such as the 3B or 4 disable the package
 
 rm /usr/share/radio/RPi/\_\_init\_\_.py
 
+Licensing
+=========
+
+*GPIOconverter* is released under the
+[GNU General Public License version 2](https://www.gnu.org/licenses/gpl-2.0.txt),
+
 Support
 =======
 It is not possible to provide support for GPIO.py as literally hundreds of thousands of programs
 are using GPIO routines. The code is provided as is and without any warranties or "fit for purpose" etc.
 
 Bob Rathbone
+
+https://bobrathbone.com
