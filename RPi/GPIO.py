@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #
 # Raspberry Pi RPi.GPIO interception package
-# $Id: GPIO.py,v 1.3 2024/01/01 10:44:21 bob Exp $
+# $Id: GPIO.py,v 1.4 2024/01/03 16:23:19 bob Exp $
 #
 # Author : Bob Rathbone
 # Site   : http://www.bobrathbone.com
@@ -36,6 +36,15 @@ RISING = 31
 FALLING = 32
 BOTH = 33
 
+mode_board = False    # Mode is GPIO.BCM (GPIO numbering) or GPIO.BOARD (Pin numbering)
+# pins is the mapping between GPIO.BOARD and GPIO.BCM
+pins = { 
+         3:2, 5:3, 7:4, 8:14, 10:15, 11:17, 12:18, 13:27, 15:22, 16:23, 18:24, 19:10,
+         21:9, 22:25, 23:11, 24:8, 26:7, 27:0, 28:1, 29:5, 31:6, 32:12, 33:13, 35:19,
+         36:16, 37:26, 38:20, 40:21,
+       }
+        
+
 # LGPIO Flags
 LGPIO_PULL_UP = 32
 LGPIO_PULL_DOWN = 64
@@ -47,14 +56,32 @@ edges = ['NONE','RISING_EDGE','FALLING_EDGE','BOTH_EDGES']
 
 chip = lgpio.gpiochip_open(4)
 
+# Set mode BCM (GPIO numbering) or BOARD (Pin numbering)
 def setmode(mode=BCM):
-    return
+    global mode_board
+    if mode == BOARD:
+        mode_board = True
+    else:
+        mode_board = False
 
+# Get the pin or GPIO depending upon the mode (BCM or BOARD)
+def _get_gpio(line):
+    global mode_board
+    pin = line 
+    if mode_board:
+        try:
+            pin = pins[line]
+        except:
+            pass
+    return pin     
+
+# Set warnings ignored
 def setwarnings(boolean=True):
     return
 
 # Setup GPIO line for INPUT or OUTPUT and set internal Pull Up/Down resistors
 def setup(gpio,mode=OUT,pull_up_down=PUD_OFF):
+    gpio = _get_gpio(gpio)
     if mode == IN:
         # Set up pull up/down resistors
         if pull_up_down == PUD_UP:
@@ -74,7 +101,7 @@ def setup(gpio,mode=OUT,pull_up_down=PUD_OFF):
 # 1: change to high (a rising edge)
 # 2: no level change (a watchdog timeout)
 def _gpio_event(chip,gpio,level,flags):
-    #print(chip,gpio,level,hex(flags))
+    gpio = _get_gpio(gpio)
     if level < 2:   # Ignore no level change (2)
         try:
             callbacks[gpio](gpio)
@@ -83,6 +110,7 @@ def _gpio_event(chip,gpio,level,flags):
 
 # Add event detection - Converts GPIO add_event_detect call to LGPIO 
 def add_event_detect(gpio,edge,callback=None,bouncetime=0):
+    gpio = _get_gpio(gpio)
     callbacks[gpio] = callback 
     if edge ==  RISING:
         detect = lgpio.RISING_EDGE
@@ -102,6 +130,7 @@ def add_event_detect(gpio,edge,callback=None,bouncetime=0):
 
 # Read a GPIO input 
 def input(gpio):
+    gpio = _get_gpio(gpio)
     level = None
     try:
         level=lgpio.gpio_read(chip, gpio)
@@ -111,6 +140,7 @@ def input(gpio):
 
 # Output to a GPIO pin
 def output(gpio,level=LOW):
+    gpio = _get_gpio(gpio)
     try:
         lgpio.gpio_write(chip, gpio, level)
     except Exception as e:
@@ -135,6 +165,11 @@ if __name__ == '__main__':
     # See https://abyz.me.uk/lg/py_lgpio.html#gpio_get_mode 
     mode = lgpio.gpio_get_mode(chip, gpio)
     print("GPIO",gpio,"mode",mode)
+
+    setmode(BOARD)
+    gpio = _get_gpio(7)
+    print(BOARD,7,gpio)
+     
 
 # set tabstop=4 shiftwidth=4 expandtab
 # retab
