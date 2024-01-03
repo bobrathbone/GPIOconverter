@@ -6,11 +6,21 @@ Do not use it for earlier models such as the Model 3B or 4
 It is designed to intercept GPIO calls and convert them to LGPIO calls.
 See: https://abyz.me.uk/lg/py_lgpio.html
 
+OUTPUT: User Program --> GPIO calls --> GPIOconverter --> LGPIO
+
+INPUT: LGPIO events --> GPIOconverter --> GPIO events --> User Program
+
 Pre-requisites
 =============
 Install package python3-lgpio
 
 sudo apt install python3-lgpio
+
+Downloading GPIOconverter
+========================
+Log into the Raspberry Pi Model 5 and clone the GPIODconverter software and run:
+
+git clone https://github.com/bobrathbone/GPIOconverter
 
 Installation
 ============
