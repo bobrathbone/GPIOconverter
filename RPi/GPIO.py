@@ -146,6 +146,29 @@ def output(gpio,level=LOW):
     except Exception as e:
         print(str(e)) 
 
+# Create PWM object
+def PWM(gpio, frequency):  
+    gpio = _get_gpio(gpio)
+    return PWMInstance(gpio, frequency)  # Return a PWM object
+
+# PWMInstance Class
+class PWMInstance: 
+    def __init__(self, gpio, frequency):
+        self.gpio = gpio
+        self.frequency = frequency
+        self.duty_cycle = 0  # Initialize
+
+    def start(self, duty_cycle):
+        self.ChangeDutyCycle(duty_cycle)
+
+    def ChangeDutyCycle(self, duty_cycle):
+        self.duty_cycle = duty_cycle
+        lgpio.tx_pwm(chip, self.gpio, self.frequency, duty_cycle)
+
+    def stop(self):
+        lgpio.tx_pwm(chip, self.gpio, 0, 0)
+
+
 def get_info():
     return 
 
