@@ -163,7 +163,7 @@ class PWMInstance:
 
     def ChangeDutyCycle(self, duty_cycle):
         self.duty_cycle = duty_cycle
-        lgpio.tx_pwm(chip, self.gpio, self.frequency, duty_cycle)
+        lgpio.tx_pwm(chip, self.gpio, self.frequency, self.duty_cycle)
 
     def ChangeFrequency(self, frequency):
         self.frequency = frequency
