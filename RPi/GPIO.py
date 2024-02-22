@@ -175,8 +175,6 @@ def get_info():
 def cleanup():
     lgpio.gpiochip_close(chip)
 
-import gpiod
-
 # LGPIO information 
 if __name__ == '__main__':
     gpio=4
