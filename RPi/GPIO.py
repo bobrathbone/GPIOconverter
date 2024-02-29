@@ -80,20 +80,28 @@ def setwarnings(boolean=True):
     return
 
 # Setup GPIO line for INPUT or OUTPUT and set internal Pull Up/Down resistors
-def setup(gpio,mode=OUT,pull_up_down=PUD_OFF):
-    gpio = _get_gpio(gpio)
-    if mode == IN:
-        # Set up pull up/down resistors
-        if pull_up_down == PUD_UP:
-            pullupdown = LGPIO_PULL_UP
-        elif pull_up_down == PUD_DOWN:
-            pullupdown = LGPIO_PULL_DOWN
-        elif pull_up_down == PUD_OFF:
-            pullupdown = LGPIO_PULL_OFF
-        lgpio.gpio_claim_input(chip,gpio,pullupdown)
+# Pass single BCM pin, or tuple of BCM pins
+def setup(gpios,mode=OUT,pull_up_down=PUD_OFF):
+    if isinstance(gpios, int):  # Handle if a single pin is passed
+        gpios = (gpios,)  # Convert the single pin into a tuple
 
-    elif mode == OUT:
-        lgpio.gpio_claim_output(chip, gpio)
+    if not isinstance(gpios, tuple):  
+        raise TypeError("gpios must be a tuple of pins or a single integer pin number")
+
+    for gpio in gpios:
+        gpio = _get_gpio(gpio)
+        if mode == IN:
+            # Set up pull up/down resistors
+            if pull_up_down == PUD_UP:
+                pullupdown = LGPIO_PULL_UP
+            elif pull_up_down == PUD_DOWN:
+                pullupdown = LGPIO_PULL_DOWN
+            elif pull_up_down == PUD_OFF:
+                pullupdown = LGPIO_PULL_OFF
+            lgpio.gpio_claim_input(chip, gpio, pullupdown)
+
+        elif mode == OUT:
+            lgpio.gpio_claim_output(chip, gpio)
 
 # Convert LGPIO event to a GPIO event and call user callback
 # Level values (Not used by our callback but could be)
