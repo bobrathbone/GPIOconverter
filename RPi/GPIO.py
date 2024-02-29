@@ -122,7 +122,7 @@ def add_event_detect(gpio,edge,callback=None,bouncetime=0):
         detect = lgpio.BOTH_EDGES
     try:
         lgpio.callback(chip, gpio, detect,_gpio_event)
-        lgpio.gpio_claim_alert(chip, gpio, 1, lFlags=0, notify_handle=None)
+        lgpio.gpio_claim_alert(chip, gpio, detect, lFlags=0, notify_handle=None)
         lgpio.gpio_set_debounce_micros(chip, gpio, bouncetime)
 
     except Exception as e:
