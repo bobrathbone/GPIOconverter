@@ -64,6 +64,14 @@ def setmode(mode=BCM):
     else:
         mode_board = False
 
+# Get mode BCM (GPIO numbering) or BOARD (Pin numbering)
+def getmode():
+    global mode_board
+    if mode_board == True:
+        return BOARD
+    else:
+        return BCM
+
 # Get the pin or GPIO depending upon the mode (BCM or BOARD)
 def _get_gpio(line):
     global mode_board
