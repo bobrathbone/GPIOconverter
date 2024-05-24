@@ -75,6 +75,14 @@ def setmode(mode=BCM):
     else:
         mode_board = False
 
+# Get mode BCM (GPIO numbering) or BOARD (Pin numbering)
+def getmode():
+    global mode_board
+    if mode_board == True:
+        return BOARD
+    else:
+        return BCM
+
 # Get the pin or GPIO depending upon the mode (BCM or BOARD)
 def _get_gpio(line):
     global mode_board
@@ -91,20 +99,28 @@ def setwarnings(boolean=True):
     return
 
 # Setup GPIO line for INPUT or OUTPUT and set internal Pull Up/Down resistors
-def setup(gpio,mode=OUT,pull_up_down=PUD_OFF):
-    gpio = _get_gpio(gpio)
-    if mode == IN:
-        # Set up pull up/down resistors
-        if pull_up_down == PUD_UP:
-            pullupdown = LGPIO_PULL_UP
-        elif pull_up_down == PUD_DOWN:
-            pullupdown = LGPIO_PULL_DOWN
-        elif pull_up_down == PUD_OFF:
-            pullupdown = LGPIO_PULL_OFF
-        lgpio.gpio_claim_input(chip,gpio,pullupdown)
+# Pass single BCM pin, or tuple of BCM pins
+def setup(gpios,mode=OUT,pull_up_down=PUD_OFF):
+    if isinstance(gpios, int):  # Handle if a single pin is passed
+        gpios = (gpios,)  # Convert the single pin into a tuple
 
-    elif mode == OUT:
-        lgpio.gpio_claim_output(chip, gpio)
+    if not isinstance(gpios, tuple):  
+        raise TypeError("gpios must be a tuple of pins or a single integer pin number")
+
+    for gpio in gpios:
+        gpio = _get_gpio(gpio)
+        if mode == IN:
+            # Set up pull up/down resistors
+            if pull_up_down == PUD_UP:
+                pullupdown = LGPIO_PULL_UP
+            elif pull_up_down == PUD_DOWN:
+                pullupdown = LGPIO_PULL_DOWN
+            elif pull_up_down == PUD_OFF:
+                pullupdown = LGPIO_PULL_OFF
+            lgpio.gpio_claim_input(chip, gpio, pullupdown)
+
+        elif mode == OUT:
+            lgpio.gpio_claim_output(chip, gpio)
 
 # Convert LGPIO event to a GPIO event and call user callback
 # Level values (Not used by our callback but could be)
@@ -133,7 +149,7 @@ def add_event_detect(gpio,edge,callback=None,bouncetime=0):
         detect = lgpio.BOTH_EDGES
     try:
         lgpio.callback(chip, gpio, detect,_gpio_event)
-        lgpio.gpio_claim_alert(chip, gpio, 1, lFlags=0, notify_handle=None)
+        lgpio.gpio_claim_alert(chip, gpio, detect, lFlags=0, notify_handle=None)
         lgpio.gpio_set_debounce_micros(chip, gpio, bouncetime)
 
     except Exception as e:
@@ -181,7 +197,11 @@ class PWMInstance:
 
     def ChangeDutyCycle(self, duty_cycle):
         self.duty_cycle = duty_cycle
-        lgpio.tx_pwm(chip, self.gpio, self.frequency, duty_cycle)
+        lgpio.tx_pwm(chip, self.gpio, self.frequency, self.duty_cycle)
+
+    def ChangeFrequency(self, frequency):
+        self.frequency = frequency
+        lgpio.tx_pwm(chip, self.gpio, self.frequency, self.duty_cycle)
 
     def stop(self):
         lgpio.tx_pwm(chip, self.gpio, 0, 0)
