@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #
 # Raspberry Pi RPi.GPIO interception package
-# $Id: GPIO.py,v 1.4 2024/01/03 16:23:19 bob Exp $
+# $Id: GPIO.py,v 1.7 2024/05/23 11:55:06 bob Exp $
 #
 # Author : Bob Rathbone
 # Site   : http://www.bobrathbone.com
@@ -37,7 +37,7 @@ FALLING = 32
 BOTH = 33
 
 mode_board = False    # Mode is GPIO.BCM (GPIO numbering) or GPIO.BOARD (Pin numbering)
-# pins is the mapping between GPIO.BOARD and GPIO.BCM
+# pins is the mapping between GPIO.BOARD and GPIO.BCM. Format Pin:GPIO
 pins = { 
          3:2, 5:3, 7:4, 8:14, 10:15, 11:17, 12:18, 13:27, 15:22, 16:23, 18:24, 19:10,
          21:9, 22:25, 23:11, 24:8, 26:7, 27:0, 28:1, 29:5, 31:6, 32:12, 33:13, 35:19,
@@ -54,7 +54,18 @@ LGPIO_PULL_OFF = 128
 callbacks = {}
 edges = ['NONE','RISING_EDGE','FALLING_EDGE','BOTH_EDGES']
 
-chip = lgpio.gpiochip_open(4)
+# The Raspberry Pi Model 5 uses the RP1 chip (4). Try to open first
+try:
+    chip = lgpio.gpiochip_open(4)
+except Exception as e:
+    pass
+
+# Earlier Raspberry Pi 4b,3B etc uses SOC chip  for I/O (0). 
+try:
+    chip = lgpio.gpiochip_open(0)
+except Exception as e:
+    print ("Fatal error: %s" % (str(e)))
+    exit(1) 
 
 # Set mode BCM (GPIO numbering) or BOARD (Pin numbering)
 def setmode(mode=BCM):
@@ -146,6 +157,13 @@ def output(gpio,level=LOW):
     except Exception as e:
         print(str(e)) 
 
+def get_info():
+    return 
+
+def cleanup():
+    lgpio.gpiochip_close(chip)
+
+
 # Create PWM object
 def PWM(gpio, frequency):  
     gpio = _get_gpio(gpio)
@@ -168,12 +186,6 @@ class PWMInstance:
     def stop(self):
         lgpio.tx_pwm(chip, self.gpio, 0, 0)
 
-
-def get_info():
-    return 
-
-def cleanup():
-    lgpio.gpiochip_close(chip)
 
 # LGPIO information 
 if __name__ == '__main__':
