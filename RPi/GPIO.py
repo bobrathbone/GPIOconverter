@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #
 # Raspberry Pi RPi.GPIO interception package
-# $Id: GPIO.py,v 1.7 2024/05/23 11:55:06 bob Exp $
+# $Id: GPIO.py,v 1.10 2024/06/09 10:37:31 bob Exp $
 #
 # Author : Bob Rathbone
 # Site   : http://www.bobrathbone.com
@@ -18,6 +18,7 @@
 
 import lgpio
 import time
+import re
 import pdb
 
 # RPi.GPIO definitions (Note: they are different to LGPIO variables)
@@ -75,14 +76,6 @@ def setmode(mode=BCM):
     else:
         mode_board = False
 
-# Get mode BCM (GPIO numbering) or BOARD (Pin numbering)
-def getmode():
-    global mode_board
-    if mode_board == True:
-        return BOARD
-    else:
-        return BCM
-
 # Get the pin or GPIO depending upon the mode (BCM or BOARD)
 def _get_gpio(line):
     global mode_board
@@ -99,28 +92,20 @@ def setwarnings(boolean=True):
     return
 
 # Setup GPIO line for INPUT or OUTPUT and set internal Pull Up/Down resistors
-# Pass single BCM pin, or tuple of BCM pins
-def setup(gpios,mode=OUT,pull_up_down=PUD_OFF):
-    if isinstance(gpios, int):  # Handle if a single pin is passed
-        gpios = (gpios,)  # Convert the single pin into a tuple
+def setup(gpio,mode=OUT,pull_up_down=PUD_OFF):
+    gpio = _get_gpio(gpio)
+    if mode == IN:
+        # Set up pull up/down resistors
+        if pull_up_down == PUD_UP:
+            pullupdown = LGPIO_PULL_UP
+        elif pull_up_down == PUD_DOWN:
+            pullupdown = LGPIO_PULL_DOWN
+        elif pull_up_down == PUD_OFF:
+            pullupdown = LGPIO_PULL_OFF
+        lgpio.gpio_claim_input(chip,gpio,pullupdown)
 
-    if not isinstance(gpios, tuple):  
-        raise TypeError("gpios must be a tuple of pins or a single integer pin number")
-
-    for gpio in gpios:
-        gpio = _get_gpio(gpio)
-        if mode == IN:
-            # Set up pull up/down resistors
-            if pull_up_down == PUD_UP:
-                pullupdown = LGPIO_PULL_UP
-            elif pull_up_down == PUD_DOWN:
-                pullupdown = LGPIO_PULL_DOWN
-            elif pull_up_down == PUD_OFF:
-                pullupdown = LGPIO_PULL_OFF
-            lgpio.gpio_claim_input(chip, gpio, pullupdown)
-
-        elif mode == OUT:
-            lgpio.gpio_claim_output(chip, gpio)
+    elif mode == OUT:
+        lgpio.gpio_claim_output(chip, gpio)
 
 # Convert LGPIO event to a GPIO event and call user callback
 # Level values (Not used by our callback but could be)
@@ -129,11 +114,10 @@ def setup(gpios,mode=OUT,pull_up_down=PUD_OFF):
 # 2: no level change (a watchdog timeout)
 def _gpio_event(chip,gpio,level,flags):
     gpio = _get_gpio(gpio)
-    if level < 2:   # Ignore no level change (2)
-        try:
-            callbacks[gpio](gpio)
-        except Exception as e:
-            print(str(e)) 
+    try:
+        callbacks[gpio](gpio)
+    except Exception as e:
+        print(str(e)) 
 
 # Add event detection - Converts GPIO add_event_detect call to LGPIO 
 def add_event_detect(gpio,edge,callback=None,bouncetime=0):
@@ -149,7 +133,7 @@ def add_event_detect(gpio,edge,callback=None,bouncetime=0):
         detect = lgpio.BOTH_EDGES
     try:
         lgpio.callback(chip, gpio, detect,_gpio_event)
-        lgpio.gpio_claim_alert(chip, gpio, detect, lFlags=0, notify_handle=None)
+        lgpio.gpio_claim_alert(chip, gpio, 1, lFlags=0, notify_handle=None)
         lgpio.gpio_set_debounce_micros(chip, gpio, bouncetime)
 
     except Exception as e:
@@ -179,6 +163,18 @@ def get_info():
 def cleanup():
     lgpio.gpiochip_close(chip)
 
+# Get the Raspberry pi board version from /proc/cpuinfo
+def getBoardRevision():
+    revision = 1
+    with open("/proc/cpuinfo") as f:
+        cpuinfo = f.read()
+    rev_hex = re.search(r"(?<=\nRevision)[ |:|\t]*(\w+)", cpuinfo).group(1)
+    rev_int = int(rev_hex,16)
+    if rev_int > 3:
+        revision = 2
+    return revision
+
+RPI_REVISION = getBoardRevision()
 
 # Create PWM object
 def PWM(gpio, frequency):  
@@ -197,15 +193,10 @@ class PWMInstance:
 
     def ChangeDutyCycle(self, duty_cycle):
         self.duty_cycle = duty_cycle
-        lgpio.tx_pwm(chip, self.gpio, self.frequency, self.duty_cycle)
-
-    def ChangeFrequency(self, frequency):
-        self.frequency = frequency
-        lgpio.tx_pwm(chip, self.gpio, self.frequency, self.duty_cycle)
+        lgpio.tx_pwm(chip, self.gpio, self.frequency, duty_cycle)
 
     def stop(self):
         lgpio.tx_pwm(chip, self.gpio, 0, 0)
-
 
 # LGPIO information 
 if __name__ == '__main__':
@@ -222,7 +213,6 @@ if __name__ == '__main__':
     setmode(BOARD)
     gpio = _get_gpio(7)
     print(BOARD,7,gpio)
-     
 
 # set tabstop=4 shiftwidth=4 expandtab
 # retab
