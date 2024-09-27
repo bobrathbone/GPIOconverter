@@ -1,13 +1,13 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 #
 # Raspberry Pi RPi.GPIO interception package
-# $Id: GPIO.py,v 1.10 2024/06/09 10:37:31 bob Exp $
+# $Id: GPIO.py,v 1.14 2002/01/03 14:41:25 bob Exp $
 #
 # Author : Bob Rathbone
 # Site   : http://www.bobrathbone.com
 #
 # This package intercepts RPi.GPIO calls and redirects them to the lgpio package
-# calls specifically used for the Raspberry Pi model 5 
+# calls specifically used for the Raspberry Pi model 5 or Bookworm 
 # See: https://abyz.me.uk/lg/py_lgpio.html
 #
 # License: GNU V3, See https://www.gnu.org/copyleft/gpl.html
@@ -20,6 +20,8 @@ import lgpio
 import time
 import re
 import pdb
+
+IGNORE_WARNINGS = True  # Set to False for debugging GPIO code. See GPIO.setwarnings
 
 # RPi.GPIO definitions (Note: they are different to LGPIO variables)
 BOARD = 10
@@ -45,7 +47,6 @@ pins = {
          36:16, 37:26, 38:20, 40:21,
        }
         
-
 # LGPIO Flags
 LGPIO_PULL_UP = 32
 LGPIO_PULL_DOWN = 64
@@ -87,8 +88,12 @@ def _get_gpio(line):
             pass
     return pin     
 
-# Set warnings ignored
+# The lgpio package does not have the equivalent of GPIO.setwarnings
+# so the setwarnings can eitherbe ignored or be used to enable/disable lgpio exceptions
+# Set IGNORE_WARNINGS to True at the beginning of this program to prevent warnings/exceptions
 def setwarnings(boolean=True):
+    if not IGNORE_WARNINGS:
+        lgpio.exceptions = boolean
     return
 
 # Setup GPIO line for INPUT or OUTPUT and set internal Pull Up/Down resistors
@@ -127,13 +132,11 @@ def add_event_detect(gpio,edge,callback=None,bouncetime=0):
         detect = lgpio.RISING_EDGE
     elif edge ==  FALLING:
         detect = lgpio.FALLING_EDGE
-    elif edge ==  BOTH:
-        detect = lgpio.BOTH_EDGES
     else:
         detect = lgpio.BOTH_EDGES
     try:
         lgpio.callback(chip, gpio, detect,_gpio_event)
-        lgpio.gpio_claim_alert(chip, gpio, 1, lFlags=0, notify_handle=None)
+        lgpio.gpio_claim_alert(chip, gpio, 1, lFlags=detect, notify_handle=None)
         lgpio.gpio_set_debounce_micros(chip, gpio, bouncetime)
 
     except Exception as e:
@@ -213,6 +216,7 @@ if __name__ == '__main__':
     setmode(BOARD)
     gpio = _get_gpio(7)
     print(BOARD,7,gpio)
+    lgpio.gpiochip_close(chip)
 
 # set tabstop=4 shiftwidth=4 expandtab
 # retab
