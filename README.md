@@ -1,9 +1,11 @@
 RPi/GPIO.py
 ===========
-The GPIO.py code is only for use with the Raspberry Pi Model 5.
-Do not use it for earlier models such as the Model 3B or 4
+**Version 2 - 21st January 2025** 
 
-It is designed to intercept GPIO calls and convert them to LGPIO calls.
+The GPIO.py code is primarialy for use with the Raspberry Pi Model 5 which uses the RP1 I/O chip.
+It is also used for earlier models such as the 3B and 4B that are running *Bookworm*
+
+It is designed to intercept traditional GPIO calls and convert them to LGPIO calls.
 See: https://abyz.me.uk/lg/py_lgpio.html
 
 OUTPUT: User Program --> GPIO calls --> GPIOconverter --> LGPIO
@@ -57,6 +59,7 @@ Support
 =======
 It is not possible to provide support for GPIO.py as literally hundreds of thousands of programs
 are using GPIO routines. The code is provided as is and without any warranties or "fit for purpose" etc.
+Any issues reported should relate to this code only and not the functionality or logic of any GPIO code using it.
 
 Bob Rathbone
 
