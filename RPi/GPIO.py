@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 #
 # Raspberry Pi RPi.GPIO interception package
-# $Id: GPIO.py,v 1.1 2025/01/19 11:25:56 bob Exp $
+# $Id: GPIO.py,v 1.2 2025/01/30 10:26:47 bob Exp $
 #
 # Author : Bob Rathbone
 # Site   : http://www.bobrathbone.com
@@ -203,6 +203,10 @@ class PWMInstance:
     def ChangeDutyCycle(self, duty_cycle):
         self.duty_cycle = duty_cycle
         lgpio.tx_pwm(chip, self.gpio, self.frequency, duty_cycle)
+
+    def ChangeFrequency(self, frequency):
+        self.frequency = frequency
+        lgpio.tx_pwm(chip, self.gpio, frequency, self.duty_cycle)
 
     def stop(self):
         lgpio.tx_pwm(chip, self.gpio, 0, 0)

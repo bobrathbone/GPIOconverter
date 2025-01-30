@@ -11,11 +11,12 @@ from RPi import GPIO
 import time
 
 led = 16
+freq = 100
 
 GPIO.setmode(GPIO.BCM)
 
 GPIO.setup(led, GPIO.OUT)
-pwm_led1 = GPIO.PWM(led, 100)
+pwm_led1 = GPIO.PWM(led, freq)
 pwm_led1.start(10)
 try:
     while True:
@@ -27,6 +28,11 @@ try:
         time.sleep(0.8)
         pwm_led1.ChangeDutyCycle(0)
         time.sleep(0.8)
+        if freq == 100:
+            freq = 5
+        else:
+            freq = 100
+        pwm_led1.ChangeFrequency(freq)
 except KeyboardInterrupt as e:
     print(e)
 finally:
