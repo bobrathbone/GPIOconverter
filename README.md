@@ -1,6 +1,9 @@
-RPi/GPIO.py
-===========
-Version 3 - 30th January 2025
+GPIOconverter package
+=====================
+
+## RPi/GPIO.py
+
+Version 1.0 - 17th February 2025
 
 The GPIO.py code is primarly for use with the Raspberry Pi Model 5 qand
 for earlier models such as the Model 3B or 4 that are running Bookworm OS
@@ -8,46 +11,49 @@ for earlier models such as the Model 3B or 4 that are running Bookworm OS
 It is designed to intercept GPIO calls and convert them to LGPIO calls.
 See: https://abyz.me.uk/lg/py_lgpio.html
 
-OUTPUT: User Program --> GPIO calls --> GPIOconverter --> LGPIO
-
+```
+OUTPUT: User Program --> GPIO calls --> GPIOconverter --> LGPIO 
 INPUT: LGPIO events --> GPIOconverter --> GPIO events --> User Program
+```
 
 Pre-requisites
 =============
-##Install package python3-lgpio
-
+## Install package python3-lgpio
+```
 sudo apt install python3-lgpio
+```
 
 Downloading GPIOconverter from GitHub
 ========================
 Log into the Raspberry Pi Model 5 and clone the GPIODconverter software and run:
-
+```
 git clone https://github.com/bobrathbone/GPIOconverter
-
+```
 Installation
 ============
 Create a sub-directory called RPi in the directory where your GPIO code is installed
 For example code in directory /usr/share/radio:
-
+```
 cd /usr/share/radio
-
 mkdir RPi
-
 cp \<source\>/GPIO.py /usr/share/radio/RPi/.
+```
 
 Note: The radiod package installation script has already done this
 
 Enabling GPIO.py
 ================
 Only if using a Raspberry Pi model 5 or if running Bookworm or later. Example:
-
-touch /usr/share/radio/RPi/\_\_init\_\_.py
+```
+touch /usr/share/radio/RPi/__init__.py
+```
 
 The instruction above will cause the code using the GPIO calls to see directory RPi as a package.
 
 For earlier models such as the 3B or 4 disable the package
-
-rm /usr/share/radio/RPi/\_\_init\_\_.py
+```
+rm /usr/share/radio/RPi/__init__.py
+```
 
 Licensing
 =========
