@@ -1,8 +1,2 @@
-RPi/__pycache__/__init__.cpython-312.pyc
-RPi/__pycache__/GPIO.cpython-312.pyc
-RPi/CVS/Entries
-RPi/CVS/Entries.Extra
-RPi/CVS/Entries.Old
-RPi/CVS/Entries.Extra.Old
-RPi/CVS/Repository
-RPi/CVS/Root
+.pyc
+CVS/
