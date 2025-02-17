@@ -50,12 +50,14 @@ sudo dpkg -i gpioconverter_1.0_all.deb
 ```
 Installation to a local directory
 =================================
+It may well be that you only wish to install the package GPIOconverter packafge in a specific project directory.
+If so you do not need to create the pakage but only copy the main files to your project directory. 
 Create a sub-directory called RPi in the directory where your GPIO code is installed
-For example code in directory /usr/share/myproject:
+For example code in directory **/usr/share/myproject**:
 ```
 cd /usr/share/myproject
 mkdir RPi
-cp <source>/GPIO.py /usr/share/myproject/RPi/.
+cp <source>/RPi/GPIO.py /usr/share/myproject/RPi/.
 ```
 
 ## Enabling GPIO.py
@@ -66,7 +68,7 @@ touch /usr/share/myproject/RPi/__init__.py
 
 The above instruction will cause the code using the GPIO calls to see directory **RPi** as a package.
 
-For earlier models such as the 3B or 4 disable the package
+For earlier models such as the 3B or 4 disable the package unless running on **Bookworm OS**
 ```
 rm /usr/share/rmyproject/RPi/__init__.py
 ```
