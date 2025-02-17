@@ -50,8 +50,8 @@ sudo dpkg -i gpioconverter_1.0_all.deb
 ```
 Installation to a local directory
 =================================
-It may well be that you only wish to install the package GPIOconverter packafge in a specific project directory.
-If so you do not need to create the pakage but only copy the main files to your project directory. 
+It may well be that you only wish to install the package **GPIOconverter** software in a specific project directory.
+If so you do not need to create the package but only copy the main files to your project directory. 
 Create a sub-directory called RPi in the directory where your GPIO code is installed
 For example code in directory **/usr/share/myproject**:
 ```
