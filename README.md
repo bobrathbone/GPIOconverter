@@ -16,56 +16,72 @@ OUTPUT: User Program --> GPIO calls --> GPIOconverter --> LGPIO
 INPUT: LGPIO events --> GPIOconverter --> GPIO events --> User Program
 ```
 
-Pre-requisites
-=============
-## Install package python3-lgpio
+Building the GPIOconverter package
+===============================
+The software is installed from the GPIOconverter package. To build it carry out the following procedure:
+
+## Install the python3-lgpio package
+Log into the Raspberry Pi and install the python3-lgpio package
 ```
 sudo apt install python3-lgpio
 ```
-
-Downloading GPIOconverter from GitHub
-========================
-Log into the Raspberry Pi Model 5 and clone the GPIODconverter software and run:
+## Downloading GPIOconverter from GitHub
+Now clone the GPIOconverter software and run:
 ```
 git clone https://github.com/bobrathbone/GPIOconverter
 ```
-Installation
-============
+## Build the GPIOconverter package
+```
+cd GPIOconverter
+chmod +x build.sh
+./build.sh
+```
+
+The build script will now create the **GPIOconverter package**
+At the end of the build you will be asked if you wish to check the package with Lintian - Answer n 
+```
+Check using Lintian y/n: n
+:
+```
+## Installing the GPIOconverter package
+```
+Now install the gpioconverter_1.0_all.deb package with the following command:
+sudo dpkg -i gpioconverter_1.0_all.deb
+```
+Installation to a local directory
+=================================
 Create a sub-directory called RPi in the directory where your GPIO code is installed
-For example code in directory /usr/share/radio:
+For example code in directory /usr/share/myproject:
 ```
-cd /usr/share/radio
+cd /usr/share/myproject
 mkdir RPi
-cp \<source\>/GPIO.py /usr/share/radio/RPi/.
+cp <source>/GPIO.py /usr/share/myproject/RPi/.
 ```
 
-Note: The radiod package installation script has already done this
-
-Enabling GPIO.py
-================
+## Enabling GPIO.py
 Only if using a Raspberry Pi model 5 or if running Bookworm or later. Example:
 ```
-touch /usr/share/radio/RPi/__init__.py
+touch /usr/share/myproject/RPi/__init__.py
 ```
 
-The instruction above will cause the code using the GPIO calls to see directory RPi as a package.
+The above instruction will cause the code using the GPIO calls to see directory **RPi** as a package.
 
 For earlier models such as the 3B or 4 disable the package
 ```
-rm /usr/share/radio/RPi/__init__.py
+rm /usr/share/rmyproject/RPi/__init__.py
 ```
 
 Licensing
 =========
-
 *GPIOconverter* is released under the
-[GNU General Public License version 2](https://www.gnu.org/licenses/gpl-2.0.txt),
+
+[GNU General Public License version 3](https://www.gnu.org/licenses/gpl-3.0.en.html)
 
 Support
 =======
 It is not possible to provide support for GPIO.py as literally hundreds of thousands of programs
 are using GPIO routines. The code is provided as is and without any warranties or "fit for purpose" etc.
 
-Bob Rathbone
+**Bob Rathbone**
 
-https://bobrathbone.com
+[https://bobrathbone.com](https://bobrathbone.com)
