@@ -1,7 +1,9 @@
 RPi/GPIO.py
 ===========
-The GPIO.py code is primarily for use with the Raspberry Pi Model 5 and for use  
-and for use with earlier models such as the Model 3B or 4B which are running Bookworm OS or later 
+Version 3 - 30th January 2025
+
+The GPIO.py code is primarly for use with the Raspberry Pi Model 5 qand
+for earlier models such as the Model 3B or 4 that are running Bookworm OS
 
 It is designed to intercept GPIO calls and convert them to LGPIO calls.
 See: https://abyz.me.uk/lg/py_lgpio.html
@@ -12,11 +14,11 @@ INPUT: LGPIO events --> GPIOconverter --> GPIO events --> User Program
 
 Pre-requisites
 =============
-Install package python3-lgpio
+##Install package python3-lgpio
 
 sudo apt install python3-lgpio
 
-Downloading GPIOconverter
+Downloading GPIOconverter from GitHub
 ========================
 Log into the Raspberry Pi Model 5 and clone the GPIODconverter software and run:
 
@@ -37,7 +39,7 @@ Note: The radiod package installation script has already done this
 
 Enabling GPIO.py
 ================
-For a Raspberry Pi model 5 only. Example:
+Only if using a Raspberry Pi model 5 or if running Bookworm or later. Example:
 
 touch /usr/share/radio/RPi/\_\_init\_\_.py
 
