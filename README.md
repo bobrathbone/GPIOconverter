@@ -66,7 +66,7 @@ cd /usr/share/myproject
 mkdir RPi
 cp /home/<user>/GPIOconverter/RPi/GPIO.py /usr/share/myproject/RPi/.
 ```
-Where <user> is your log in name (usually 'pi')
+Where \<user\> is your log in name (usually 'pi')
 
 ## Enabling GPIO.py
 If running on a **Raspberry Pi model 5** or if running **Bookworm (32-bit)** or later. Example:
@@ -74,10 +74,30 @@ If running on a **Raspberry Pi model 5** or if running **Bookworm (32-bit)** or 
 touch /usr/share/myproject/RPi/__init__.py
 ```
 The above instruction will cause the code using the GPIO calls to see directory **RPi** as a package.
-For earlier models such as the 3B or 4 disable the package unless running on **Bookworm OS**
+For earlier models such as the 3B or 4 disable the package unless running on **Bookworm 32-bit OS** using
+the instruction below:
 ```
-rm /usr/share/rmyproject/RPi/__init__.py
+rm /usr/share/myproject/RPi/__init__.py
 ```
+## test_pym.py
+The **test_pym.py** program is used to test the **PWM** (Pulse Width Modulation) function of **RPi.GPIO**. 
+First edit the **test_pwm.py** file and change the led GPIO setting to the the GPIO number you are using for the test.
+```
+led = 16
+```
+Now run the program. The selected LED should brighten and dim. Press Ctrl-C to end the test. 
+```
+cd /usr/share/myproject/RPi
+./test_pwm.py
+```
+**Note:** If you are only using **GPIOconverter** in a local project directory then it is necessary to first copy 
+**test_pwm.py** to it and run it from there as shown in the following example.
+```
+cd /usr/share/myproject
+cp RPi/test_pwm.py .
+./test_pwm.py
+```
+The above is not necessarry if you installed the **GPIOconverter** package as previously shown.
 
 Licensing
 =========
@@ -86,8 +106,9 @@ Licensing
 
 Support
 =======
-It is not possible to provide support for GPIO.py as literally hundreds of thousands of programs
-are using GPIO routines. The code is provided as is and without any warranties or "fit for purpose" etc.
+Although it is not possible to provide support for GPIO.py as literally hundreds of thousands of programs
+are using GPIO routines, you can raise an issue in GitHub if you think that there is a problem with this software. 
+The code is provided as is and without any warranties or "fit for purpose" etc.
 
 **Bob Rathbone**
 
