@@ -23,7 +23,7 @@ Depends: python3,python3-lgpio
 # Readme: <README.Debian file; defaults to a generic one>
 # Extra-Files: <comma-separated list of additional files for the doc directory>
 preinst: gpioconverter.preinst
-postinst: gpioconverter.postinst
+# postinst: gpioconverter.postinst
 
 Extra-Files: README.md
 
@@ -36,7 +36,7 @@ Files: RPi/GPIO.py /lib/python3/dist-packages/RPi
     RPi/test_pwm.py    /lib/python3/dist-packages/RPi
     README.md      /lib/python3/dist-packages/RPi
 
-postrm: gpioconverter.postrm
+# postrm: gpioconverter.postrm
 
 Description: GPIOconverter Software shim 
  Software shim to convert legacy RPi.GPIO calls to lgpio
