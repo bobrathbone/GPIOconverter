@@ -52,7 +52,7 @@ Check using Lintian y/n: n
 At the end of the run the build script will display the instruction to install the package using **dpkg** installer
 as shown below.
 ```
-Install the **gpioconverter_1.0_all.deb** package with the following command:
+Install the gpioconverter_1.0_all.deb package with the following command:
 sudo dpkg -i gpioconverter_1.0_all.deb
 ```
 Installation to a local directory
