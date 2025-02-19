@@ -99,6 +99,17 @@ cp RPi/test_pwm.py .
 ```
 The above is not necessarry if you installed the **GPIOconverter** package as previously shown.
 
+Uninstalling GPIOconverter
+=========================
+Run the following instruction:
+```
+sudo dpkg -r gpioconverter
+```
+Now restore the standard **RPi.GPIO library**
+```
+sudo mv /usr/lib/python3/dist-packages/RPi_standard /usr/lib/python3/dist-packages/RPi
+```
+
 Licensing
 =========
 *GPIOconverter* is released under the
@@ -106,8 +117,8 @@ Licensing
 
 Support
 =======
-Although it is not possible to provide support for GPIO.py as literally hundreds of thousands of programs
-are using GPIO routines, you can raise an issue in GitHub if you think that there is a problem with this software. 
+Although it is not possible to provide support for **GPIO.py** as literally hundreds of thousands of programs
+are using GPIO routines, you can raise an issue in **GitHub** if you think that there is a problem with this software. 
 The code is provided as is and without any warranties or "fit for purpose" etc.
 
 **Bob Rathbone**
