@@ -1,5 +1,5 @@
 #!/bin/bash
-# $Id: build.sh,v 1.2 2025/02/17 19:27:40 bob Exp $
+# $Id: build.sh,v 1.3 2025/02/19 14:29:37 bob Exp $
 # Build script for the Raspberry GPIOconverter shim 
 # Run this script as  a regular user and not root
 
@@ -42,6 +42,7 @@ echo "Building package ${PKG} version ${VERSION} Architecture ${BIT}-bit" | tee 
 echo "from input file ${PKGDEF}" | tee -a ${BUILDLOG}
 sudo chown  ${USR}:${GRP} RPi/*.py
 sudo chmod  +x RPi/*.py
+sudo chmod  -x RPi/__init__.py
 
 
 if [[ ! -f ${EQUIVS} ]];then

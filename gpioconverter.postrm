@@ -1,0 +1,35 @@
+#!/bin/bash
+set -e
+# Radio daemon post remove script
+# $Id: gpioconverter.postrm,v 1.6 2025/02/19 15:27:29 bob Exp $
+
+# Colours
+orange='\033[33m'
+blue='\033[34m'
+green='\033[32m'
+default='\033[39m'
+
+# Check if standard RPi package or GPIOconverter installed
+PKGS=$(python -c 'import site; print(site.getsitepackages())')
+RPi=""
+for pkg in ${PKGS};
+do
+    pkg=$(echo ${pkg} | tr -d "]")
+    pkg=$(echo ${pkg} | tr -d "[")
+    pkg=$(echo ${pkg} | tr -d "'")
+    pkg=$(echo ${pkg} | tr -d ",")
+
+    if [[ -d ${pkg}/RPi_standard ]]; then
+        echo "${pkg}/RPi_standard exists" 
+        if [[ ! -d ${pkg}/RPi ]]; then
+            cmd="sudo mv ${pkg}/RPi_standard ${pkg}/RPi"
+            echo "Restore the standard RPi package in ${pkg} with the following command"
+            printf $orange
+            echo ${cmd};
+            printf $default
+        fi
+    fi
+done
+
+exit 0
+# End of script
