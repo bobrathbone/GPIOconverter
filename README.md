@@ -3,14 +3,14 @@ GPIOconverter package
 
 ## RPi/GPIO.py
 
-Version 1.0 - 17th February 2025
+Version 1.0 - 18th February 2025
 
 **GPIOconverter** is primarly for use with the Raspberry Pi Model 5 and
 for earlier models such as the Model 3B or 4B that are running **Bookworm OS**.
 Legacy **RPi.GPIO** calls do not work on the the Raspberry Model 5 as it now 
 has a separate chip called **RP1** for controlling I/O including the pins on the GPIO header (j8).
 Also the new **RPi/GPIO package** on Bookworm that is meant to be used but at the time of writing does not 
-work on the **32-Bit version**. The **64-bit** version of **Bookworm** works fine. 
+work on the **32-Bit version**. The **64-bit** version of **Bookworm** works fine. **GPIO.py** is the program which carries out the conversion.
 
 **GPIOconverter** is designed overcome these problems and it works by intercepting GPIO calls and converts them to LGPIO calls.
 See: https://abyz.me.uk/lg/py_lgpio.html
