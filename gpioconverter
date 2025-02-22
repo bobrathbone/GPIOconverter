@@ -1,7 +1,7 @@
 
 ### Commented entries have reasonable defaults.
 ### Uncomment to edit them.
-# $Id: gpioconverter,v 1.5 2025/02/17 19:27:40 bob Exp $
+# $Id: gpioconverter,v 1.8 2025/02/19 14:29:37 bob Exp $
 # This package must be built under Bookworm (Not Buster or earlier)
 # This will build the 32 or 64-bit version depending upon the OS being used
 # Source: <source package name; defaults to package name>
@@ -36,7 +36,7 @@ Files: RPi/GPIO.py /lib/python3/dist-packages/RPi
     RPi/test_pwm.py    /lib/python3/dist-packages/RPi
     README.md      /lib/python3/dist-packages/RPi
 
-# postrm: gpioconverter.postrm
+postrm: gpioconverter.postrm
 
-Description: GPIOconverter Software shim 
- Software shim to convert legacy RPi.GPIO calls to lgpio
+Description: Software shim to convert RPi.GPIO calls to lgpio
+ Converts legacy RPi.GPIO calls to lgpio calls
