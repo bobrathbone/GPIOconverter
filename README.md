@@ -19,9 +19,18 @@ See: https://abyz.me.uk/lg/py_lgpio.html
 OUTPUT: User Program --> GPIO calls --> GPIOconverter --> LGPIO 
 INPUT: LGPIO events --> GPIOconverter --> GPIO events --> User Program
 ```
+Installing the ready made GPIOconverter package
+===============================================
+You can install the ready made package from the [https://bobrathbone.com](https://bobrathbone.com) Web site.
+Log into your Raspberry Pi and run the following.
+```
+curl -L -O https://bobrathbone.com/raspberrypi/packages/gpioconverter_1.0_all.deb
+sudo dpkg -i gpioconverter_1.0_all.deb
+```
+**Note:**  The **GPIOconverter** package can only be installed on Bookworm OS or later.
 
 Building the GPIOconverter package
-===============================
+==================================
 The software is installed from the GPIOconverter package. To build it carry out the following procedure:
 
 ## Install the python3-lgpio package
@@ -116,7 +125,6 @@ Now restore the standard **RPi.GPIO library**
 ```
 sudo mv /usr/lib/python3/dist-packages/RPi_standard /usr/lib/python3/dist-packages/RPi
 ```
-
 Licensing
 =========
 *GPIOconverter* is released under the
