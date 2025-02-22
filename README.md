@@ -24,6 +24,7 @@ Installing the ready made GPIOconverter package
 You can install the ready made package from the [https://bobrathbone.com](https://bobrathbone.com) Web site.
 Log into your Raspberry Pi and run the following.
 ```
+sudo apt install python3-lgpio
 curl -L -O https://bobrathbone.com/raspberrypi/packages/gpioconverter_1.0_all.deb
 sudo dpkg -i gpioconverter_1.0_all.deb
 ```
