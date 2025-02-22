@@ -38,11 +38,12 @@ git clone https://github.com/bobrathbone/GPIOconverter
 ## Build the GPIOconverter package
 ```
 cd GPIOconverter
-chmod +x build.sh
-./build.sh
+chmod +x setup.sh
+./setup.sh
 ```
 
-The build script will now create the **GPIOconverter** package.
+The **setup.sh** script will now install the necessary build tools (**equivs apt-file** and **lintian**) and then 
+create the **GPIOconverter** package by running the **build.sh** script.
 Towards the end of the build you will be asked if you wish to check the package with Lintian. 
 This is only used by developers so - Answer n 
 ```
@@ -54,6 +55,12 @@ as shown below.
 ```
 Install the gpioconverter_1.0_all.deb package with the following command:
 sudo dpkg -i gpioconverter_1.0_all.deb
+```
+## Subsequent package builds
+The **setup.sh** script only needs to be run once. Run **build.sh** directly for all subsequent builds.
+```
+cd GPIOconverter
+./build.sh
 ```
 Installation to a local directory
 =================================
