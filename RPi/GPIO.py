@@ -103,21 +103,33 @@ def setwarnings(boolean=True):
     return
 
 # Setup GPIO line for INPUT or OUTPUT and set internal Pull Up/Down resistors
-def setup(gpio,mode=OUT,pull_up_down=PUD_OFF):
-    gpio = _get_gpio(gpio)
-    if mode == IN:
-        # Set up pull up/down resistors
-        if pull_up_down == PUD_UP:
-            pullupdown = LGPIO_PULL_UP
-        elif pull_up_down == PUD_DOWN:
-            pullupdown = LGPIO_PULL_DOWN
-        elif pull_up_down == PUD_OFF:
-            pullupdown = LGPIO_PULL_OFF
-        lgpio.gpio_claim_input(chip,gpio,pullupdown)
+def setup(pin_id,mode=OUT,pull_up_down=PUD_OFF,initial=LOW):
+    if type(pin_id) == int:
+        pin_count = 1
+    elif type(pin_id) == list:
+        pin_count = len(pin_id)
+    for i in range(pin_count):
+        if type(pin_id) == int:
+            gpio = _get_gpio(pin_id)
+        elif type(pin_id) == list:
+            gpio = _get_gpio(pin_id[i])
+        if mode == IN:
+            # Set up pull up/down resistors
+            if pull_up_down == PUD_UP:
+                pullupdown = LGPIO_PULL_UP
+            elif pull_up_down == PUD_DOWN:
+                pullupdown = LGPIO_PULL_DOWN
+            elif pull_up_down == PUD_OFF:
+                pullupdown = LGPIO_PULL_OFF
+            lgpio.gpio_claim_input(chip,gpio,pullupdown)
 
-    elif mode == OUT:
-        lgpio.gpio_claim_output(chip, gpio)
-
+        elif mode == OUT:
+            if initial == None:
+                lgpio.gpio_claim_output(chip, gpio)
+            elif initial == LOW:
+                lgpio.gpio_claim_output(chip, gpio, level=0)
+            elif initial == HIGH:
+                lgpio.gpio_claim_output(chip, gpio, level=1)
 # Convert LGPIO event to a GPIO event and call user callback
 # Level values (Not used by our callback but could be)
 # 0: change to low (a falling edge)
