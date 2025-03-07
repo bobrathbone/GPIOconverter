@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# $Id: test_pwm.py,v 1.3 2025/02/17 19:28:25 bob Exp $
+# $Id: test_pwm.py,v 1.7 2025/02/15 11:20:57 bob Exp $
 # test_pwm.py 
 # Author: Fgmnts https://github.com/fgmnts
 # Change the led GPIO number to the GPIO your led is connected to

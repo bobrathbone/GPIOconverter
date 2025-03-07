@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 #
 # Raspberry Pi RPi.GPIO interception package
-# $Id: GPIO.py,v 1.2 2025/01/30 10:26:47 bob Exp $
+# $Id: GPIO.py,v 1.5 2025/02/15 11:04:52 bob Exp $
 #
 # Author : Bob Rathbone
 # Site   : http://www.bobrathbone.com
@@ -89,47 +89,52 @@ def _get_gpio(line):
     pin = line 
     if mode_board:
         try:
-            pin = pins[line]
+            if type(line) is list:
+                pin = []
+                for x in line:
+                    pin.append(pins[line])
+            else:
+                pin = pins[line]
         except:
             pass
     return pin     
 
 # The lgpio package does not have the equivalent of GPIO.setwarnings
-# so the setwarnings can eitherbe ignored or be used to enable/disable lgpio exceptions
+# so the setwarnings can either be ignored or be used to enable/disable lgpio exceptions
 # Set IGNORE_WARNINGS to True at the beginning of this program to prevent warnings/exceptions
 def setwarnings(boolean=True):
     if not IGNORE_WARNINGS:
         lgpio.exceptions = boolean
     return
 
-# Setup GPIO line for INPUT or OUTPUT and set internal Pull Up/Down resistors
-def setup(pin_id,mode=OUT,pull_up_down=PUD_OFF,initial=LOW):
-    if type(pin_id) == int:
-        pin_count = 1
-    elif type(pin_id) == list:
-        pin_count = len(pin_id)
-    for i in range(pin_count):
-        if type(pin_id) == int:
-            gpio = _get_gpio(pin_id)
-        elif type(pin_id) == list:
-            gpio = _get_gpio(pin_id[i])
-        if mode == IN:
-            # Set up pull up/down resistors
-            if pull_up_down == PUD_UP:
-                pullupdown = LGPIO_PULL_UP
-            elif pull_up_down == PUD_DOWN:
-                pullupdown = LGPIO_PULL_DOWN
-            elif pull_up_down == PUD_OFF:
-                pullupdown = LGPIO_PULL_OFF
+'''
+ Setup GPIO line for INPUT or OUTPUT and set internal Pull Up/Down resistors
+ This routine handles either a single GPIO or a list of GPIOs
+ See https://sourceforge.net/p/raspberry-gpio-python/wiki/BasicUsage/
+'''
+def setup(gpio,mode=OUT,pull_up_down=PUD_OFF):
+    gpio = _get_gpio(gpio)
+    if mode == IN:
+        # Set up pull up/down resistors
+        if pull_up_down == PUD_UP:
+            pullupdown = LGPIO_PULL_UP
+        elif pull_up_down == PUD_DOWN:
+            pullupdown = LGPIO_PULL_DOWN
+        elif pull_up_down == PUD_OFF:
+            pullupdown = LGPIO_PULL_OFF
+
+        # Handle single gpio or a list of gpios
+        if type(gpio) is list:
+            lgpio.group_claim_input(chip,gpio,pullupdown)
+        else:
             lgpio.gpio_claim_input(chip,gpio,pullupdown)
 
-        elif mode == OUT:
-            if initial == None:
-                lgpio.gpio_claim_output(chip, gpio)
-            elif initial == LOW:
-                lgpio.gpio_claim_output(chip, gpio, level=0)
-            elif initial == HIGH:
-                lgpio.gpio_claim_output(chip, gpio, level=1)
+    elif mode == OUT:
+        if type(gpio) is list:
+            lgpio.group_claim_output(chip, gpio)
+        else:
+            lgpio.gpio_claim_output(chip, gpio)
+
 # Convert LGPIO event to a GPIO event and call user callback
 # Level values (Not used by our callback but could be)
 # 0: change to low (a falling edge)
@@ -170,18 +175,37 @@ def input(gpio):
         print(str(e)) 
     return level
 
-# Output to a GPIO pin
-def output(gpio,level=LOW):
-    gpio = _get_gpio(gpio)
+# Output to a GPIO pin or group of pins
+def output(gpio,level):
     try:
-        lgpio.gpio_write(chip, gpio, level)
+        if type(gpio) is list:
+            newlist = []
+            newlist = zip(gpio,level)
+            for arr in (newlist): 
+                (pin,value) = arr
+                pin = _get_gpio(pin)
+                lgpio.gpio_write(chip,pin,value)
+        else:
+            pin = _get_gpio(gpio)
+            lgpio.gpio_write(chip,pin,level)
+
     except Exception as e:
         print(str(e)) 
 
 def get_info():
     return 
 
-def cleanup():
+# GPIO.cleanup 
+# Issue: Currently unless gpio(s) are specified they are left in 
+# their last state. Workaround: specify a GPIO or a group of GPIOs
+def cleanup(gpio=None):
+
+    if type(gpio) is list:
+        for pin in gpio:
+            lgpio.gpio_write(chip,pin,0)
+    elif gpio is not None:
+        lgpio.gpio_write(chip,gpio,0)
+
     lgpio.gpiochip_close(chip)
 
 # Get the Raspberry pi board version from /proc/cpuinfo
