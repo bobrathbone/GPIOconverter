@@ -5,14 +5,15 @@ GPIOconverter package
 
 Version 1.0 - 18th February 2025
 
-**GPIOconverter** is primarly for use with the Raspberry Pi Model 5 and
-for earlier models such as the Model 3B or 4B that are running **Bookworm OS**.
+**GPIOconverter** is a so-called **software shim** and is primarly for use with the **Raspberry Pi Model 5**
+computer and for earlier models such as the **Model 3B** or **4B** that are running **Bookworm OS**.
 Legacy **RPi.GPIO** calls do not work on the the Raspberry Model 5 as it now 
 has a separate chip called **RP1** for controlling I/O including the pins on the GPIO header (j8).
 Also the new **RPi/GPIO package** on Bookworm that is meant to be used but at the time of writing does not 
-work on the **32-Bit version**. The **64-bit** version of **Bookworm** works fine. **GPIO.py** is the program which carries out the conversion.
+work on the **32-Bit version**. The **64-bit** version of **Bookworm** works fine. This will no doubt change in
+the future. **GPIO.py** is the program which carries out the conversion.
 
-**GPIOconverter** is designed overcome these problems and it works by intercepting GPIO calls and converts them to LGPIO calls.
+**GPIOconverter** is designed overcome these problems and it works by intercepting **RPi.GPIO** calls and converts them to **LGPIO** calls.
 See: https://abyz.me.uk/lg/py_lgpio.html
 
 ```
@@ -59,6 +60,7 @@ This is only used by developers so - Answer n
 ```
 Check using Lintian y/n: n
 ```
+The package definition will be found in the **gpioconverter** file.
 ## Installing the GPIOconverter package
 At the end of the run the build script will display the instruction to install the package using **dpkg** installer
 as shown below.
@@ -96,6 +98,15 @@ the instruction below:
 ```
 rm /usr/share/myproject/RPi/__init__.py
 ```
+## test_group.py
+The **test_group.py** program is a simple test program used to test the **RPi.GPIO group** functions. 
+First edit the **test_group.py** file and change the list of GPIOs in **chan_list** to change the GPIO list that you are using for the test and the single LED GPIO 
+```
+chan_list = [18,16,17,4]        # Group GPIOs
+led = 16   # Led GPIO for mode BCM 
+```
+The program first flashes a single LED as configured by the **led** parameter and then switches alternate LEDs defined in **chan_list**  
+
 ## test_pym.py
 The **test_pym.py** program is used to test the **PWM** (Pulse Width Modulation) function of **RPi.GPIO**. 
 First edit the **test_pwm.py** file and change the led GPIO setting to the the GPIO number you are using for the test.
@@ -135,7 +146,7 @@ Support
 =======
 Although it is not possible to provide support for **GPIO.py** as literally hundreds of thousands of programs
 are using GPIO routines, you can raise an issue in **GitHub** if you think that there is a problem with this software. 
-The code is provided as is and without any warranties or "fit for purpose" etc.
+The code is provided as is and without any warranties or "fit for purpose" etc. Participation in this project is welcome.
 
 **Bob Rathbone**
 
