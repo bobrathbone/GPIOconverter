@@ -10,7 +10,7 @@ green='\033[32m'
 default='\033[39m'
 
 # Check if standard RPi package or GPIOconverter installed
-PKGS=$(python -c 'import site; print(site.getsitepackages())')
+PKGS=$(python3 -c 'import site; print(site.getsitepackages())')
 RPi=""
 for pkg in ${PKGS};
 do
