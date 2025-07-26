@@ -3,7 +3,7 @@ GPIOconverter package
 
 ## RPi/GPIO.py
 
-Version 1.0 - 18th February 2025
+Version 1.1 - 26 July 2025
 
 **GPIOconverter** is a so-called **software shim** and is primarly for use with the **Raspberry Pi Model 5**
 computer and for earlier models such as the **Model 3B** or **4B** that are running **Bookworm OS**.
@@ -26,8 +26,8 @@ You can install the ready made package from the [https://bobrathbone.com](https:
 Log into your Raspberry Pi and run the following.
 ```
 sudo apt install python3-lgpio
-curl -L -O https://bobrathbone.com/raspberrypi/packages/gpioconverter_1.0_all.deb
-sudo dpkg -i gpioconverter_1.0_all.deb
+curl -L -O https://bobrathbone.com/raspberrypi/packages/gpioconverter_1.1_all.deb
+sudo dpkg -i gpioconverter_1.1_all.deb
 ```
 **Note:**  The **GPIOconverter** package can only be installed on Bookworm OS or later.
 
@@ -65,8 +65,8 @@ The package definition will be found in the **gpioconverter** file.
 At the end of the run the build script will display the instruction to install the package using **dpkg** installer
 as shown below.
 ```
-Install the gpioconverter_1.0_all.deb package with the following command:
-sudo dpkg -i gpioconverter_1.0_all.deb
+Install the gpioconverter_1.1_all.deb package with the following command:
+sudo dpkg -i gpioconverter_1.1_all.deb
 ```
 ## Subsequent package builds
 The **setup.sh** script only needs to be run once. Run **build.sh** directly for all subsequent builds.

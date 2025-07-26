@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 # Radio daemon post remove script
-# $Id: gpioconverter.postrm,v 1.6 2025/02/19 15:27:29 bob Exp $
+# $Id: gpioconverter.postrm,v 1.7 2025/03/11 11:04:26 bob Exp $
 
 # Colours
 orange='\033[33m'

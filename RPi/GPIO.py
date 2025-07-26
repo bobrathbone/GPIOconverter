@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 #
 # Raspberry Pi RPi.GPIO interception package
-# $Id: GPIO.py,v 1.5 2025/02/15 11:04:52 bob Exp $
+# $Id: GPIO.py,v 1.7 2025/07/25 08:22:54 bob Exp $
 #
 # Author : Bob Rathbone
 # Site   : http://www.bobrathbone.com
@@ -49,14 +49,10 @@ pins = {
          36:16, 37:26, 38:20, 40:21,
        }
         
-# LGPIO Flags
-LGPIO_PULL_UP = 32
-LGPIO_PULL_DOWN = 64
-LGPIO_PULL_OFF = 128
-
-# A dictionary containing line event callbacks accessed using GPIO number
-callbacks = {}
-edges = ['NONE','RISING_EDGE','FALLING_EDGE','BOTH_EDGES']
+# A series of dictionaries containing individual GPIO parameters accessed by GPIO number
+callbacks = {}  # RPi/GPIO line event callbacks
+edges = {}      # Edge settings RISING, FALLING or BOTH
+pull_ups = {}   # Pull-ups SET_PULL_UP, SET_PULL_DOWN or SET_PULL_NONE
 
 # The Raspberry Pi Model 5 uses the RP1 chip (4). Try to open first
 if os.path.exists("/proc/device-tree/aliases/gpio4"):
@@ -117,11 +113,14 @@ def setup(gpio,mode=OUT,pull_up_down=PUD_OFF):
     if mode == IN:
         # Set up pull up/down resistors
         if pull_up_down == PUD_UP:
-            pullupdown = LGPIO_PULL_UP
+            pullupdown = lgpio.SET_PULL_UP
         elif pull_up_down == PUD_DOWN:
-            pullupdown = LGPIO_PULL_DOWN
+            pullupdown = lgpio.SET_PULL_DOWN
         elif pull_up_down == PUD_OFF:
-            pullupdown = LGPIO_PULL_OFF
+            pullupdown = lgpio.SET_PULL_NONE
+
+        # Store pull_up flag for his GPIO
+        pull_ups[gpio] = pullupdown
 
         # Handle single gpio or a list of gpios
         if type(gpio) is list:
@@ -141,25 +140,34 @@ def setup(gpio,mode=OUT,pull_up_down=PUD_OFF):
 # 1: change to high (a rising edge)
 # 2: no level change (a watchdog timeout)
 def _gpio_event(chip,gpio,level,flags):
+    edge = edges[gpio]
     gpio = _get_gpio(gpio)
+    
+    # RISING or FALLING
     try:
-        callbacks[gpio](gpio)
+        if (edge == FALLING or edge == BOTH) and level < 1:
+            #print("_gpio_event FALLING level=%d edge %d" % (level,edge))
+            callbacks[gpio](gpio)
+        elif (edge == RISING or edge == BOTH) and level > 0:
+            #print("_gpio_event RISING level=%d edge %d" % (level,edge))
+            callbacks[gpio](gpio)
+
     except Exception as e:
         print(str(e)) 
 
-# Add event detection - Converts GPIO add_event_detect call to LGPIO 
+# Add event detection - Converts RPi.GPIO add_event_detect call to LGPIO equivelant
 def add_event_detect(gpio,edge,callback=None,bouncetime=0):
     gpio = _get_gpio(gpio)
     callbacks[gpio] = callback 
-    if edge ==  RISING:
-        detect = lgpio.RISING_EDGE
-    elif edge ==  FALLING:
-        detect = lgpio.FALLING_EDGE
-    else:
-        detect = lgpio.BOTH_EDGES
+    edges[gpio] = edge
+
+    # We listen for both  edges and sort it out in the event routine
+    detect = lgpio.BOTH_EDGES
+    pullupdown =  pull_ups[gpio]    # Set pullup internal resistors 
     try:
+        lflags = pullupdown
+        lgpio.gpio_claim_alert(chip, gpio, eFlags=detect, lFlags=lflags, notify_handle=None)
         lgpio.callback(chip, gpio, detect,_gpio_event)
-        lgpio.gpio_claim_alert(chip, gpio, 1, lFlags=detect, notify_handle=None)
         lgpio.gpio_set_debounce_micros(chip, gpio, bouncetime)
 
     except Exception as e:

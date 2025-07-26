@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 #
 # Raspberry Pi RPi.GPIO interception package
-# $Id: test_group.py,v 1.3 2025/02/15 11:27:30 bob Exp $
+# $Id: test_group.py,v 1.4 2025/02/16 09:25:02 bob Exp $
 #
 # Author : Bob Rathbone
 # Site   : http://www.bobrathbone.com

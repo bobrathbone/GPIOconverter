@@ -1,7 +1,7 @@
 
 ### Commented entries have reasonable defaults.
 ### Uncomment to edit them.
-# $Id: gpioconverter,v 1.10 2025/02/15 11:20:57 bob Exp $
+# $Id: gpioconverter,v 1.11 2025/07/25 08:24:28 bob Exp $
 # This package must be built under Bookworm (Not Buster or earlier)
 # This will build the 32 or 64-bit version depending upon the OS being used
 # Source: <source package name; defaults to package name>
@@ -10,7 +10,7 @@ Priority: optional
 Homepage: http://www.bobrathbone.com
 
 Package: gpioconverter
-Version: 1.0
+Version: 1.1
 Maintainer: Bob Rathbone <bob@bobrathbone.com>
 Email-Address : bob@bobrathbone.com
 Standards-Version: 4.7.2
